@@ -32,4 +32,4 @@ Import the utilities you need from the package:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Copyright (c) 2023 [Ameen Alade](https://ameenalade.dev)
+Copyright (c) 2024 [Ameen Alade](https://ameenalade.dev)
