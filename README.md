@@ -19,7 +19,7 @@ Install the package using npm:
 ```bash
 npm install modern-css-in-js-utils 
 
-// or
+or
 
 yarn add modern-css-in-js-utils
 ```
@@ -27,3 +27,9 @@ yarn add modern-css-in-js-utils
 ## Usage
 Import the utilities you need from the package:
 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2023 [Ameen Alade](https://ameenalade.dev)
