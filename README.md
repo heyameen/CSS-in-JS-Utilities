@@ -58,7 +58,6 @@ const customContainer = flexContainer('column', 'space-between', 'center');
 
 ```typescript
 import { flexItem } from 'css-in-js-utilities';
-
 // Create a flex item with default values
 const defaultItem = flexItem();
 // Result:
