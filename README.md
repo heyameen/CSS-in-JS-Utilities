@@ -17,11 +17,11 @@ A modern, comprehensive collection of helper functions and utilities for CSS-in-
 Install the package using npm:
 
 ```bash
-npm install modern-css-in-js-utils 
+npm install css-in-js-utilities
 
 or
 
-yarn add modern-css-in-js-utils
+yarn add css-in-js-utilities
 ```
 
 ## Usage
