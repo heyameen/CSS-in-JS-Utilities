@@ -1,4 +1,4 @@
-# Modern CSS-in-JS Utils
+# Modern CSS-in-JS Utilities
 
 A modern, comprehensive collection of helper functions and utilities for CSS-in-JS libraries. This package provides a set of TypeScript utilities to speed up common styling tasks and improve consistency in your React projects.
 
