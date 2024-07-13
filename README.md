@@ -142,6 +142,64 @@ const customItem = gridItem(1, 3, 2, 4, 'start', 'center');
 //   alignSelf: 'center'
 // }
 ```
+gridContainer Parameters
+1. `columns`: number | string (default: 1)
+2. `rows`: number | string (default: 'auto')
+3. `gap`: string (default: '1rem')
+4. `justifyItems`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
+5. `alignItems`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
+6. `justifyContent`: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' (default: 'start')
+7. `alignContent`: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' (default: 'start')
+
+gridItem Parameters
+1. `colStart`: number | 'auto' (default: 'auto')
+2. `colEnd`: number | 'auto' (default: 'auto')
+3. `rowStart`: number | 'auto' (default: 'auto')
+4. `rowEnd`: number | 'auto' (default: 'auto')
+5. `justifySelf`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
+6. `alignSelf`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
+
+## Responsive Design
+
+Import the responsive utility from the package:
+
+```typescript
+import { responsive } from 'css-in-js-utilities';
+
+// Create responsive styles
+const responsiveStyles = responsive({
+  display: { base: 'block', md: 'flex' },
+  flexDirection: { base: 'column', lg: 'row' },
+  padding: { base: '1rem', lg: '2rem' },
+  fontSize: { base: '14px', md: '16px', xl: '18px' },
+});
+
+// Result:
+// {
+//   display: 'block',
+//   flexDirection: 'column',
+//   padding: '1rem',
+//   fontSize: '14px',
+//   '@media (min-width: 768px)': {
+//     display: 'flex',
+//     fontSize: '16px'
+//   },
+//   '@media (min-width: 1024px)': {
+//     flexDirection: 'row',
+//     padding: '2rem'
+//   },
+//   '@media (min-width: 1280px)': {
+//     fontSize: '18px'
+//   }
+// }
+```
+The responsive function allows you to define styles that change based on screen size. It uses the following breakpoints:
+1. `sm`: 640px
+2. `md`: 768px
+3. `lg`: 1024px
+4. `xl`: 1280px
+5. `2xl`: 1536px
+
 
 ## License
 
