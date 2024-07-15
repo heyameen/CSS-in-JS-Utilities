@@ -200,6 +200,18 @@ The responsive function allows you to define styles that change based on screen 
 4. `xl`: 1280px
 5. `2xl`: 1536px
 
+## Contributing
+
+We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/SpecificFeature`)
+3. Commit your changes (`git commit -m 'Add some SpecificFeature'`)
+4. Push to the branch (`git push origin feature/SpecificFeature`)
+5. Open a Pull Request
+
+For more detailed information on contributing, please see our [CONTRIBUTE.md](CONTRIBUTE.md) file.
+
 
 ## License
 
