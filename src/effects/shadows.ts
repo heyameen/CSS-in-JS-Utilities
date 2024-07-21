@@ -43,4 +43,4 @@ export const textShadow = (
         textShadow: `${x}px ${y}px ${blur}px ${color}`,
     };
 };
-``
+
