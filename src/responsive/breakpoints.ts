@@ -1,6 +1,7 @@
-type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-const breakpoints: Record<Breakpoint, string> = {
+const breakpoints: Record<'base' | Breakpoint, string> = {
+    base: '0',
     sm: '640px',
     md: '768px',
     lg: '1024px',
@@ -8,7 +9,7 @@ const breakpoints: Record<Breakpoint, string> = {
     '2xl': '1536px',
 };
 
-type ResponsiveValue<T> = T | Partial<Record<'base' | Breakpoint, T>>;
+type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
 
 export const responsive = <T extends Record<string, any>>(styles: {
     [K in keyof T]: ResponsiveValue<T[K]>;
