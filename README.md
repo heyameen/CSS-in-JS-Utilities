@@ -200,6 +200,86 @@ The responsive function allows you to define styles that change based on screen 
 4. `xl`: 1280px
 5. `2xl`: 1536px
 
+## Transitions
+
+Import the transition utilities from the package:
+
+```typescript
+import { transition, multipleTransitions } from 'css-in-js-utilities';
+
+// Create a single transition
+const singleTransition = transition('opacity', 300, 'ease-in-out', 100);
+// Result:
+// {
+//   transition: 'opacity 300ms ease-in-out 100ms'
+// }
+
+// Create multiple transitions
+const multiTransition = multipleTransitions(
+  transition('opacity', 300, 'ease-in-out'),
+  transition('transform', 500, 'ease-out', 100)
+);
+// Result:
+// {
+//   transition: 'opacity 300ms ease-in-out 0ms, transform 500ms ease-out 100ms'
+// }
+```
+Parameters for transition:
+
+1. `property`: TransitionProperty (default: 'all')
+2. `duration`: number (in milliseconds, default: 300)
+3. `timing`: TransitionTiming (default: 'ease')
+4. `delay`: number (in milliseconds, default: 0)
+
+The multipleTransitions function accepts any number of transition objects created by the transition function.
+
+## Shadows
+
+Import the shadow utilities from the package:
+
+```typescript
+import { boxShadow, textShadow } from 'css-in-js-utilities';
+
+// Create a box shadow
+const defaultBoxShadow = boxShadow();
+// Result:
+// {
+//   boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.1)'
+// }
+
+// Create a custom box shadow
+const customBoxShadow = boxShadow('lg', 'rgba(0, 0, 255, 0.2)', true);
+// Result:
+// {
+//   boxShadow: 'inset 0px 4px 8px 0px rgba(0, 0, 255, 0.2)'
+// }
+
+// Create a text shadow
+const defaultTextShadow = textShadow();
+// Result:
+// {
+//   textShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
+// }
+
+// Create a custom text shadow
+const customTextShadow = textShadow('xl', 'rgba(255, 0, 0, 0.3)');
+// Result:
+// {
+//   textShadow: '0px 8px 16px rgba(255, 0, 0, 0.3)'
+// }
+```
+Parameters for boxShadow:
+
+1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
+2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
+3. `inset`: boolean (default: false)
+
+Parameters for textShadow:
+
+1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
+2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
+
+
 ## Contributing
 
 We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, please follow these steps:
