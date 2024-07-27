@@ -279,6 +279,105 @@ Parameters for textShadow:
 1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
 2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
 
+## Typography
+
+Import the typography utilities from the package:
+
+```typescript
+import { fontSize, fontWeight, lineHeight, letterSpacing, textAlign, textTransform, fontFamily, textDecoration, fontStyle, createTypography } from 'css-in-js-utilities';
+
+// Create font size styles
+const responsiveFontSize = fontSize({ base: '16px', md: '18px', lg: '20px' });
+// Result:
+// {
+//   fontSize: '16px',
+//   '@media (min-width: 768px)': { fontSize: '18px' },
+//   '@media (min-width: 1024px)': { fontSize: '20px' }
+// }
+
+// Create font weight styles
+const boldWeight = fontWeight('bold');
+// Result: { fontWeight: 'bold' }
+
+// Create line height styles
+const customLineHeight = lineHeight(1.5);
+// Result: { lineHeight: 1.5 }
+
+// Create letter spacing styles
+const wideLetterSpacing = letterSpacing('0.05em');
+// Result: { letterSpacing: '0.05em' }
+
+// Create text align styles
+const centerAlign = textAlign('center');
+// Result: { textAlign: 'center' }
+
+// Create text transform styles
+const uppercase = textTransform('uppercase');
+// Result: { textTransform: 'uppercase' }
+
+// Create font family styles
+const sansSerif = fontFamily('Arial, sans-serif');
+// Result: { fontFamily: 'Arial, sans-serif' }
+
+// Create text decoration styles
+const underline = textDecoration('underline');
+// Result: { textDecoration: 'underline' }
+
+// Create font style styles
+const italic = fontStyle('italic');
+// Result: { fontStyle: 'italic' }
+
+// Create a complete typography preset
+const headingTypography = createTypography('heading', { base: '24px', md: '32px' }, 'bold', 'center');
+// Result:
+// {
+//   fontSize: '24px',
+//   fontWeight: 'bold',
+//   textAlign: 'center',
+//   lineHeight: 1.2,
+//   letterSpacing: '-0.02em',
+//   '@media (min-width: 768px)': { fontSize: '32px' }
+// }
+```
+Parameters for `fontSize`:
+`size`: Font size value or responsive object
+
+Parameters for `fontWeight`:
+`weight`: Font weight value or responsive object
+Values: 'normal', 'bold', 'lighter', 'bolder', 100-900
+
+Parameters for `lineHeight`:
+`height`: Line height value or responsive object
+
+Parameters for `letterSpacing`:
+`spacing`: Letter spacing value or responsive object
+
+Parameters for `textAlign`:
+`align`: Text alignment value or responsive object
+Values: 'left', 'right', 'center', 'justify'
+
+Parameters for `textTransform`:
+`transform`: Text transform value or responsive object
+Values: 'none', 'capitalize', 'uppercase', 'lowercase'
+
+Parameters for `fontFamily`:
+`family`: Font family value or responsive object
+
+Parameters for `textDecoration`:
+`decoration`: Text decoration value or responsive object
+Values: 'none', 'underline', 'overline', 'line-through'
+
+Parameters for `fontStyle`:
+`style`: Font style value or responsive object
+Values: 'normal', 'italic', 'oblique'
+
+Parameters for `createTypography`:
+1. `preset`: Typography preset ('heading', 'subheading', 'body', 'caption')
+2. `size`: Font size value or responsive object
+3. `weight`: Font weight value or responsive object (default: 'normal')
+4. `align`: Text alignment value or responsive object (default: 'left')
+
+All functions support responsive values using the Record type with Breakpoint keys.
 
 ## Contributing
 
