@@ -200,6 +200,185 @@ The responsive function allows you to define styles that change based on screen 
 4. `xl`: 1280px
 5. `2xl`: 1536px
 
+## Transitions
+
+Import the transition utilities from the package:
+
+```typescript
+import { transition, multipleTransitions } from 'css-in-js-utilities';
+
+// Create a single transition
+const singleTransition = transition('opacity', 300, 'ease-in-out', 100);
+// Result:
+// {
+//   transition: 'opacity 300ms ease-in-out 100ms'
+// }
+
+// Create multiple transitions
+const multiTransition = multipleTransitions(
+  transition('opacity', 300, 'ease-in-out'),
+  transition('transform', 500, 'ease-out', 100)
+);
+// Result:
+// {
+//   transition: 'opacity 300ms ease-in-out 0ms, transform 500ms ease-out 100ms'
+// }
+```
+Parameters for transition:
+
+1. `property`: TransitionProperty (default: 'all')
+2. `duration`: number (in milliseconds, default: 300)
+3. `timing`: TransitionTiming (default: 'ease')
+4. `delay`: number (in milliseconds, default: 0)
+
+The multipleTransitions function accepts any number of transition objects created by the transition function.
+
+## Shadows
+
+Import the shadow utilities from the package:
+
+```typescript
+import { boxShadow, textShadow } from 'css-in-js-utilities';
+
+// Create a box shadow
+const defaultBoxShadow = boxShadow();
+// Result:
+// {
+//   boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.1)'
+// }
+
+// Create a custom box shadow
+const customBoxShadow = boxShadow('lg', 'rgba(0, 0, 255, 0.2)', true);
+// Result:
+// {
+//   boxShadow: 'inset 0px 4px 8px 0px rgba(0, 0, 255, 0.2)'
+// }
+
+// Create a text shadow
+const defaultTextShadow = textShadow();
+// Result:
+// {
+//   textShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
+// }
+
+// Create a custom text shadow
+const customTextShadow = textShadow('xl', 'rgba(255, 0, 0, 0.3)');
+// Result:
+// {
+//   textShadow: '0px 8px 16px rgba(255, 0, 0, 0.3)'
+// }
+```
+Parameters for boxShadow:
+
+1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
+2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
+3. `inset`: boolean (default: false)
+
+Parameters for textShadow:
+
+1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
+2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
+
+## Typography
+
+Import the typography utilities from the package:
+
+```typescript
+import { fontSize, fontWeight, lineHeight, letterSpacing, textAlign, textTransform, fontFamily, textDecoration, fontStyle, createTypography } from 'css-in-js-utilities';
+
+// Create font size styles
+const responsiveFontSize = fontSize({ base: '16px', md: '18px', lg: '20px' });
+// Result:
+// {
+//   fontSize: '16px',
+//   '@media (min-width: 768px)': { fontSize: '18px' },
+//   '@media (min-width: 1024px)': { fontSize: '20px' }
+// }
+
+// Create font weight styles
+const boldWeight = fontWeight('bold');
+// Result: { fontWeight: 'bold' }
+
+// Create line height styles
+const customLineHeight = lineHeight(1.5);
+// Result: { lineHeight: 1.5 }
+
+// Create letter spacing styles
+const wideLetterSpacing = letterSpacing('0.05em');
+// Result: { letterSpacing: '0.05em' }
+
+// Create text align styles
+const centerAlign = textAlign('center');
+// Result: { textAlign: 'center' }
+
+// Create text transform styles
+const uppercase = textTransform('uppercase');
+// Result: { textTransform: 'uppercase' }
+
+// Create font family styles
+const sansSerif = fontFamily('Arial, sans-serif');
+// Result: { fontFamily: 'Arial, sans-serif' }
+
+// Create text decoration styles
+const underline = textDecoration('underline');
+// Result: { textDecoration: 'underline' }
+
+// Create font style styles
+const italic = fontStyle('italic');
+// Result: { fontStyle: 'italic' }
+
+// Create a complete typography preset
+const headingTypography = createTypography('heading', { base: '24px', md: '32px' }, 'bold', 'center');
+// Result:
+// {
+//   fontSize: '24px',
+//   fontWeight: 'bold',
+//   textAlign: 'center',
+//   lineHeight: 1.2,
+//   letterSpacing: '-0.02em',
+//   '@media (min-width: 768px)': { fontSize: '32px' }
+// }
+```
+Parameters for `fontSize`:
+`size`: Font size value or responsive object
+
+Parameters for `fontWeight`:
+`weight`: Font weight value or responsive object
+Values: 'normal', 'bold', 'lighter', 'bolder', 100-900
+
+Parameters for `lineHeight`:
+`height`: Line height value or responsive object
+
+Parameters for `letterSpacing`:
+`spacing`: Letter spacing value or responsive object
+
+Parameters for `textAlign`:
+`align`: Text alignment value or responsive object
+Values: 'left', 'right', 'center', 'justify'
+
+Parameters for `textTransform`:
+`transform`: Text transform value or responsive object
+Values: 'none', 'capitalize', 'uppercase', 'lowercase'
+
+Parameters for `fontFamily`:
+`family`: Font family value or responsive object
+
+Parameters for `textDecoration`:
+`decoration`: Text decoration value or responsive object
+Values: 'none', 'underline', 'overline', 'line-through'
+
+Parameters for `fontStyle`:
+`style`: Font style value or responsive object
+Values: 'normal', 'italic', 'oblique'
+
+Parameters for `createTypography`:
+1. `preset`: Typography preset ('heading', 'subheading', 'body', 'caption')
+2. `size`: Font size value or responsive object
+3. `weight`: Font weight value or responsive object (default: 'normal')
+4. `align`: Text alignment value or responsive object (default: 'left')
+
+All functions support responsive values using the Record type with Breakpoint keys.
+
 ## Contributing
 
 We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, please follow these steps:
