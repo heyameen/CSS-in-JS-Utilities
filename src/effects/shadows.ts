@@ -1,4 +1,4 @@
-import { isValidColor } from "../color/colorValidator";
+import { colord } from "colord";
 
 type ShadowSize = "sm" | "md" | "lg" | "xl" | "2xl";
 
@@ -21,7 +21,7 @@ export const boxShadow = (
   if (!(size in shadowSizes)) {
     throw new Error("Invalid shadow size");
   }
-  if (!isValidColor(color)) {
+  if (!colord(color).isValid()) {
     throw new Error("Invalid color value");
   }
   const { x, y, blur, spread } = shadowSizes[size];
@@ -38,7 +38,7 @@ export const textShadow = (
   if (!(size in shadowSizes)) {
     throw new Error("Invalid shadow size");
   }
-  if (!isValidColor(color)) {
+  if (!colord(color).isValid()) {
     throw new Error("Invalid color value");
   }
   const { x, y, blur } = shadowSizes[size];
