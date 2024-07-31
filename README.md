@@ -379,6 +379,44 @@ Parameters for `createTypography`:
 
 All functions support responsive values using the Record type with Breakpoint keys.
 
+## Color Utilities
+
+Import the color utilities from the package:
+
+```typescript
+import { toRgba, lighten, darken, complementary, analogous } from 'css-in-js-utilities';
+
+// Convert a color to RGBA format
+const rgbaColor = toRgba('#FF5733', 0.8);
+// Result: 'rgba(255, 87, 51, 0.8)'
+
+// Lighten a color
+const lightenedColor = lighten('#3366CC', 20);
+// Result: '#6699FF'
+
+// Darken a color
+const darkenedColor = darken('#3366CC', 20);
+// Result: '#003399'
+
+// Generate a complementary color
+const complementaryColor = complementary('#3366CC');
+// Result: '#CC9933'
+
+// Generate an analogous color
+const analogousColor = analogous('#3366CC', 30);
+// Result: '#3333CC'
+```
+These color utilities provide powerful functions for manipulating and generating colors in your CSS-in-JS projects.
+
+Parameters:
+1. `toRgba`(color: string, alpha: number = 1): Converts a color to RGBA format. Alpha should be between 0 and 1.
+2. `lighten`(color: string, amount: number): Lightens a color by a percentage (0-100).
+3. `darken`(color: string, percentage: number): Darkens a color by a percentage (0-100).
+4. `complementary`(color: string): Generates a complementary color.
+5. `analogous`(color: string, angle: number = 30): Generates an analogous color. Angle should be between 1 and 359 degrees.
+
+All functions accept colors in various formats (hex, rgb, rgba, hsl, named colors) and return results in uppercase hexadecimal format, except for toRgba which returns a rgba string.
+
 ## Contributing
 
 We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, please follow these steps:
