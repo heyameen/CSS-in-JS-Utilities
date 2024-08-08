@@ -10,7 +10,6 @@ A modern, comprehensive collection of helper functions and utilities for CSS-in-
 - Effects (shadows and transitions)
 - Color utilities
 - Animation helpers
-- Unit conversion functions
 
 ## Installation
 
@@ -416,6 +415,42 @@ Parameters:
 5. `analogous`(color: string, angle: number = 30): Generates an analogous color. Angle should be between 1 and 359 degrees.
 
 All functions accept colors in various formats (hex, rgb, rgba, hsl, named colors) and return results in uppercase hexadecimal format, except for toRgba which returns a rgba string.
+
+## Animation Helpers
+
+Import the animation utilities from the package:
+
+```typescript
+import { keyframe, animation, multipleAnimations } from 'css-in-js-utilities';
+
+// Define keyframe animations
+const fadeIn = keyframe('fadeIn', {
+  from: { opacity: 0 },
+  to: { opacity: 1 }
+});
+// Result: '@keyframes animation { from { opacity: 0; } to { opacity: 1; } }'
+
+// Create a single animation
+const fadeInAnimation = animation('fadeIn', '1s', 'ease-in-out');
+// Result: 'fadeIn 1s ease-in-out 0s 1 normal none running'
+
+// Combine multiple animations
+const complexAnimation = multipleAnimations(
+  animation('fadeIn', '1s'),
+  animation('slideIn', '0.5s', 'ease-out', '0.2s')
+);
+// Result: { animation: 'fadeIn 1s ease 0s 1 normal none running, slideIn 0.5s ease-out 0.2s 1 normal none running' }
+
+```
+These animation utilities provide powerful functions for creating and combining keyframe animations in your CSS-in-JS projects.
+
+Parameters:
+1. `keyframe` (name: string, frames: KeyframeStyles): Creates a keyframe animation string.
+2. `animation` (name: string, duration?: string | number, timingFunction?: string, delay?: string | number, iterationCount?: string | number, direction?: AnimationDirection, fillMode?: AnimationFillMode, playState?: AnimationPlayState): Creates an animation string.
+3. `multipleAnimations` (...animations: string[]): Combines multiple animations into a single animation string.
+
+These functions allow you to create complex animations with ease, providing full control over all animation properties.
+
 
 ## Contributing
 

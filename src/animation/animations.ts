@@ -1,5 +1,4 @@
 import { CSSProperties } from "react";
-import isValidCSSUnit from "../helper/isValidCSSUnit";
 
 type KeyframeStyles = Record<string, CSSProperties>;
 type AnimationDirection =
@@ -10,7 +9,7 @@ type AnimationDirection =
 type AnimationFillMode = "none" | "forwards" | "backwards" | "both";
 type AnimationPlayState = "running" | "paused";
 
-export const keyframes = (frames: KeyframeStyles): string => {
+export const keyframe = (name: string, frames: KeyframeStyles): string => {
   const keyframeString = Object.entries(frames)
     .map(([key, styles]) => {
       const cssStyles = Object.entries(styles)
@@ -19,7 +18,7 @@ export const keyframes = (frames: KeyframeStyles): string => {
       return `${key} { ${cssStyles} }`;
     })
     .join(" ");
-  return `@keyframes animation { ${keyframeString} }`;
+  return `@keyframes ${name} { ${keyframeString} }`;
 };
 
 export const animation = (
@@ -35,10 +34,10 @@ export const animation = (
   if (typeof duration === "number") duration = `${duration}ms`;
   if (typeof delay === "number") delay = `${delay}ms`;
 
-  if (!isValidCSSUnit(duration) || !isValidCSSUnit(delay)) {
-    throw new Error(
-      "Invalid duration or delay value. Use a valid CSS time unit.",
-    );
+  const isValidTimeUnit = (value: string) => /^\d+(\.\d+)?(ms|s)$/.test(value);
+
+  if (!isValidTimeUnit(duration) || !isValidTimeUnit(delay)) {
+    throw new Error("Invalid duration or delay value");
   }
 
   if (typeof iterationCount === "number" && iterationCount < 0) {
