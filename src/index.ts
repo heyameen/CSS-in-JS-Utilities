@@ -5,3 +5,4 @@ export * from "./color/colors";
 export * from "./effects/shadows";
 export * from "./effects/transitions";
 export * from "./typography/typography";
+export * from "./animation/animations";
