@@ -12,7 +12,7 @@ describe("Animation Utilities", () => {
         "100%": { opacity: 1 },
       });
       expect(result).toBe(
-        "@keyframe fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }",
+        "@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }",
       );
     });
 
@@ -22,7 +22,7 @@ describe("Animation Utilities", () => {
         to: { opacity: 1, transform: "translateY(0)" },
       });
       expect(result).toBe(
-        "@keyframe slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }",
+        "@keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }",
       );
     });
   });
