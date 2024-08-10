@@ -1,18 +1,21 @@
 {
   "name": "css-in-js-utilities",
-  "version": "1.0.1-0",
+  "version": "1.0.0",
   "description": "A modern collection of helper functions for CSS-in-JS libraries",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "tsc && echo 'Build completed successfully!'",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/heyameen/CSS-in-JS-Utilities.git"
   },
-  "keywords": [],
-  "author": "",
+  "files": ["dist", "README.md"],
+  "keywords": ["css-in-js", "utilities", "styling", "react", "typescript"],
+  "author": "Ameen Alade",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/heyameen/CSS-in-JS-Utilities/issues"
