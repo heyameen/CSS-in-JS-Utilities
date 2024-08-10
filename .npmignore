@@ -1,0 +1,10 @@
+src/
+.github/
+.idea/
+.vscode/
+.gitignore
+.prettierrc
+.jest.config.js
+.eslintrc.js
+.tsconfig.json
+setupTests.ts
