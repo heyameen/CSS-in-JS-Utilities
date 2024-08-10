@@ -1,9 +1,9 @@
 {
   "name": "css-in-js-utilities",
-  "version": "1.0.1-0",
+  "version": "1.0.0",
   "description": "A modern collection of helper functions for CSS-in-JS libraries",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
