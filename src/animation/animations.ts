@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { appendToStyleElement, insertKeyframe } from "../helper/createStyle";
 
 type KeyframeStyles = Record<string, CSSProperties>;
 type AnimationDirection =
@@ -18,7 +19,10 @@ export const keyframe = (name: string, frames: KeyframeStyles): string => {
       return `${key} { ${cssStyles} }`;
     })
     .join(" ");
-  return `@keyframes ${name} { ${keyframeString} }`;
+  const fullKeyFrame = `@keyframes ${name} { ${keyframeString} }`;
+  insertKeyframe(fullKeyFrame);
+
+  return name;
 };
 
 export const animation = (
@@ -30,7 +34,7 @@ export const animation = (
   direction: AnimationDirection = "normal",
   fillMode: AnimationFillMode = "none",
   playState: AnimationPlayState = "running",
-): string => {
+): { animation: string } => {
   if (typeof duration === "number") duration = `${duration}ms`;
   if (typeof delay === "number") delay = `${delay}ms`;
 
@@ -44,7 +48,7 @@ export const animation = (
     throw new Error('Iteration count must be a positive number or "infinite".');
   }
 
-  return [
+  const animationString = [
     name,
     duration,
     timingFunction,
@@ -54,6 +58,8 @@ export const animation = (
     fillMode,
     playState,
   ].join(" ");
+
+  return { animation: animationString };
 };
 
 export const multipleAnimations = (

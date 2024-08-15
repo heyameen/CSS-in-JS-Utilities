@@ -1,121 +1,122 @@
-import {Breakpoint, responsive} from '../responsive/breakpoints';
+import { Breakpoint, responsive } from "../responsive/breakpoints";
 import isValidCSSUnit from "../helper/isValidCSSUnit";
 
-type FontWeight = 'normal' | 'bold' | 'lighter' | 'bolder' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
-type TextAlign = 'left' | 'right' | 'center' | 'justify';
-type TextTransform = 'none' | 'capitalize' | 'uppercase' | 'lowercase';
-type TextDecoration = 'none' | 'underline' | 'overline' | 'line-through';
-type FontStyle = 'normal' | 'italic' | 'oblique';
+// Types
+type FontWeight =
+  | "normal"
+  | "bold"
+  | "lighter"
+  | "bolder"
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 600
+  | 700
+  | 800
+  | 900;
+type TextAlign = "left" | "right" | "center" | "justify";
+type TextTransform = "none" | "capitalize" | "uppercase" | "lowercase";
+type TextDecoration = "none" | "underline" | "overline" | "line-through";
+type FontStyle = "normal" | "italic" | "oblique";
+type TypographyPreset = "heading" | "subheading" | "body" | "caption";
 
-export const fontSize = (size: string | number | Record<string, string | number>) => {
-    if (typeof size === 'object') {
-        Object.entries(size).forEach(([key, value]) => {
-            if (!isValidCSSUnit(value)) {
-                throw new Error(`Invalid font size value for ${key}: ${value}. Use a number or a string with a valid CSS unit.`);
-            }
-        });
-    } else if (!isValidCSSUnit(size)) {
-        throw new Error(`Invalid font size value: ${size}. Use a number or a string with a valid CSS unit.`);
-    }
-    return responsive({ fontSize: size });
+type CSSValue = string | number;
+type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
+
+// Helper Functions
+const validateCSSValue = (value: CSSValue, propertyName: string) => {
+  if (!isValidCSSUnit(value)) {
+    throw new Error(
+      `Invalid ${propertyName} value: ${value}. Use a number or a string with a valid CSS unit.`,
+    );
+  }
 };
 
-export const fontWeight = (weight: FontWeight | Record<string, FontWeight>) => {
-    if (typeof weight === 'string' && !['normal', 'bold', 'lighter', 'bolder'].includes(weight)) {
-        throw new Error('Invalid font weight');
-    }
-    return responsive({ fontWeight: weight });
+const validateResponsiveValue = (
+  value: ResponsiveValue<CSSValue>,
+  propertyName: string,
+) => {
+  if (typeof value === "object" && value !== null) {
+    Object.entries(value).forEach(([key, val]) =>
+      validateCSSValue(val, `${propertyName} for ${key}`),
+    );
+  } else {
+    validateCSSValue(value, propertyName);
+  }
 };
 
-export const lineHeight = (height: string | number | Record<string, string | number>) => {
-    if (typeof height === 'object') {
-        Object.entries(height).forEach(([key, value]) => {
-            if (!isValidCSSUnit(value) && typeof value !== 'number') {
-                throw new Error(`Invalid line height value for ${key}: ${value}. Use a number or a string with a valid CSS unit.`);
-            }
-        });
-    } else if (!isValidCSSUnit(height) && typeof height !== 'number') {
-        throw new Error(`Invalid line height value: ${height}. Use a number or a string with a valid CSS unit.`);
-    }
-    return responsive({ lineHeight: height });
+const createResponsiveProperty = <T>(
+  property: string,
+  value: ResponsiveValue<T>,
+) => {
+  return responsive({ [property]: value });
 };
 
-export const letterSpacing = (spacing: string | number | Record<string, string | number>) => {
-    if (typeof spacing === 'object') {
-        Object.entries(spacing).forEach(([key, value]) => {
-            if (!isValidCSSUnit(value)) {
-                throw new Error(`Invalid letter spacing value for ${key}: ${value}. Use a number or a string with a valid CSS unit.`);
-            }
-        });
-    } else if (!isValidCSSUnit(spacing)) {
-        throw new Error(`Invalid letter spacing value: ${spacing}. Use a number or a string with a valid CSS unit.`);
-    }
-    return responsive({ letterSpacing: spacing });
+// Typography Functions
+export const fontSize = (size: ResponsiveValue<CSSValue>) => {
+  validateResponsiveValue(size, "font size");
+  return createResponsiveProperty("fontSize", size);
 };
 
-export const textAlign = (align: TextAlign | Record<string, TextAlign>) => {
-    if (typeof align === 'string' && !['left', 'right', 'center', 'justify'].includes(align)) {
-        throw new Error('Invalid text align');
-    }
-    return responsive({ textAlign: align });
+export const fontWeight = (weight: ResponsiveValue<FontWeight>) => {
+  return createResponsiveProperty("fontWeight", weight);
 };
 
-export const textTransform = (transform: TextTransform | Record<string, TextTransform>) => {
-    if (typeof transform === 'string' && !['none', 'capitalize', 'uppercase', 'lowercase'].includes(transform)) {
-        throw new Error('Invalid text transform');
-    }
-    return responsive({ textTransform: transform });
+export const lineHeight = (height: ResponsiveValue<CSSValue>) => {
+  validateResponsiveValue(height, "line height");
+  return createResponsiveProperty("lineHeight", height);
 };
 
-export const fontFamily = (family: string | Record<string, string>) => {
-    if (typeof family === 'string' && family.trim() === '') {
-        throw new Error('Font family cannot be empty');
-    }
-    return responsive({ fontFamily: family });
+export const letterSpacing = (spacing: ResponsiveValue<CSSValue>) => {
+  validateResponsiveValue(spacing, "letter spacing");
+  return createResponsiveProperty("letterSpacing", spacing);
 };
 
-export const textDecoration = (decoration: TextDecoration | Record<string, TextDecoration>) => {
-    if (typeof decoration === 'string' && !['none', 'underline', 'overline', 'line-through'].includes(decoration)) {
-        throw new Error('Invalid text decoration');
-    }
-    return responsive({ textDecoration: decoration });
+export const textAlign = (align: ResponsiveValue<TextAlign>) => {
+  return createResponsiveProperty("textAlign", align);
 };
 
-export const fontStyle = (style: FontStyle | Record<string, FontStyle>) => {
-    if (typeof style === 'string' && !['normal', 'italic', 'oblique'].includes(style)) {
-        throw new Error('Invalid font style');
-    }
-    return responsive({ fontStyle: style });
+export const textTransform = (transform: ResponsiveValue<TextTransform>) => {
+  return createResponsiveProperty("textTransform", transform);
 };
 
+export const fontFamily = (family: ResponsiveValue<string>) => {
+  if (typeof family === "string" && family.trim() === "") {
+    throw new Error("Font family cannot be empty");
+  }
+  return createResponsiveProperty("fontFamily", family);
+};
 
+export const textDecoration = (decoration: ResponsiveValue<TextDecoration>) => {
+  return createResponsiveProperty("textDecoration", decoration);
+};
 
-function getPresetStyles(preset: 'heading' | 'subheading' | 'body' | 'caption') {
-    switch (preset) {
-        case 'heading':
-            return { ...lineHeight(1.2), ...letterSpacing('-0.02em') };
-        case 'subheading':
-            return { ...lineHeight(1.3), ...letterSpacing('-0.01em') };
-        case 'body':
-            return { ...lineHeight(1.5) };
-        case 'caption':
-            return { ...lineHeight(1.4), ...letterSpacing('0.01em') };
-    }
-}
+export const fontStyle = (style: ResponsiveValue<FontStyle>) => {
+  return createResponsiveProperty("fontStyle", style);
+};
+
+const presetStyles: Record<TypographyPreset, Record<string, any>> = {
+  heading: { ...lineHeight(1.2), ...letterSpacing("-0.02em") },
+  subheading: { ...lineHeight(1.3), ...letterSpacing("-0.01em") },
+  body: { ...lineHeight(1.5) },
+  caption: { ...lineHeight(1.4), ...letterSpacing("0.01em") },
+};
 
 export function createTypography(
-    preset: 'heading' | 'subheading' | 'body' | 'caption',
-    size: string | Partial<Record<Breakpoint, string>>,
-    weight: FontWeight | Partial<Record<Breakpoint, FontWeight>> = 'normal',
-    align: TextAlign | Partial<Record<Breakpoint, TextAlign>> = 'left'
+  preset: TypographyPreset,
+  size: ResponsiveValue<CSSValue>,
+  weight: ResponsiveValue<FontWeight> = "normal",
+  align: ResponsiveValue<TextAlign> = "left",
 ) {
-    if (!['heading', 'subheading', 'body', 'caption'].includes(preset)) {
-        throw new Error('Invalid typography preset');
-    }
-    return {
-        ...fontSize(size),
-        ...fontWeight(weight),
-        ...textAlign(align),
-        ...getPresetStyles(preset),
-    };
+  if (!presetStyles[preset]) {
+    throw new Error("Invalid typography preset");
+  }
+  return {
+    ...fontSize(size),
+    ...fontWeight(weight),
+    ...textAlign(align),
+    ...presetStyles[preset],
+  };
 }
