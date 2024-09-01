@@ -1,80 +1,66 @@
-export function gridContainer(
-    columns: number | string = 1,
-    rows: number | string = 'auto',
-    gap: string = '1rem',
-    justifyItems: 'start' | 'end' | 'center' | 'stretch' = 'stretch',
-    alignItems: 'start' | 'end' | 'center' | 'stretch' = 'stretch',
-    justifyContent: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' = 'start',
-    alignContent: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' = 'start'
-) {
-    if (typeof columns === 'number' && columns < 1) {
-        throw new Error('columns must be a positive number or a valid CSS value');
-    }
-    if (typeof rows === 'number' && rows < 1) {
-        throw new Error('rows must be a positive number or a valid CSS value');
-    }
-    if (!/^\d+(\.\d+)?(px|em|rem|%)$/.test(gap)) {
-        throw new Error('Invalid gap value');
-    }
-    if (!['start', 'end', 'center', 'stretch'].includes(justifyItems)) {
-        throw new Error('Invalid justifyItems value');
-    }
-    if (!['start', 'end', 'center', 'stretch'].includes(alignItems)) {
-        throw new Error('Invalid alignItems value');
-    }
-    if (!['start', 'end', 'center', 'stretch', 'space-around', 'space-between', 'space-evenly'].includes(justifyContent)) {
-        throw new Error('Invalid justifyContent value');
-    }
-    if (!['start', 'end', 'center', 'stretch', 'space-around', 'space-between', 'space-evenly'].includes(alignContent)) {
-        throw new Error('Invalid alignContent value');
-    }
+import {
+  Breakpoint,
+  ResponsiveValue,
+  responsive,
+} from "../responsive/breakpoints";
 
-    return {
-        display: 'grid',
-        gridTemplateColumns: typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns,
-        gridTemplateRows: typeof rows === 'number' ? `repeat(${rows}, 1fr)` : rows,
-        gap,
-        justifyItems,
-        alignItems,
-        justifyContent,
-        alignContent,
-    };
+type GridValue = number | string;
+type JustifyAlign = "start" | "end" | "center" | "stretch";
+type JustifyContent =
+  | JustifyAlign
+  | "space-around"
+  | "space-between"
+  | "space-evenly";
+
+export function gridContainer(
+  columns: ResponsiveValue<GridValue> = 1,
+  rows: ResponsiveValue<GridValue> = "auto",
+  gap: ResponsiveValue<string> = "1rem",
+  justifyItems: ResponsiveValue<JustifyAlign> = "stretch",
+  alignItems: ResponsiveValue<JustifyAlign> = "stretch",
+  justifyContent: ResponsiveValue<JustifyContent> = "start",
+  alignContent: ResponsiveValue<JustifyContent> = "start",
+) {
+  return responsive({
+    display: "grid",
+    gridTemplateColumns: processGridValue(columns),
+    gridTemplateRows: processGridValue(rows),
+    gap,
+    justifyItems,
+    alignItems,
+    justifyContent,
+    alignContent,
+  });
 }
 
 export function gridItem(
-    colStart: number | 'auto' = 'auto',
-    colEnd: number | 'auto' = 'auto',
-    rowStart: number | 'auto' = 'auto',
-    rowEnd: number | 'auto' = 'auto',
-    justifySelf: 'start' | 'end' | 'center' | 'stretch' = 'stretch',
-    alignSelf: 'start' | 'end' | 'center' | 'stretch' = 'stretch'
+  colStart: ResponsiveValue<GridValue> = "auto",
+  colEnd: ResponsiveValue<GridValue> = "auto",
+  rowStart: ResponsiveValue<GridValue> = "auto",
+  rowEnd: ResponsiveValue<GridValue> = "auto",
+  justifySelf: ResponsiveValue<JustifyAlign> = "stretch",
+  alignSelf: ResponsiveValue<JustifyAlign> = "stretch",
 ) {
-    if (typeof colStart === 'number' && colStart < 1) {
-        throw new Error('colStart must be a positive number or "auto"');
-    }
-    if (typeof colEnd === 'number' && colEnd < 1) {
-        throw new Error('colEnd must be a positive number or "auto"');
-    }
-    if (typeof rowStart === 'number' && rowStart < 1) {
-        throw new Error('rowStart must be a positive number or "auto"');
-    }
-    if (typeof rowEnd === 'number' && rowEnd < 1) {
-        throw new Error('rowEnd must be a positive number or "auto"');
-    }
-    if (!['start', 'end', 'center', 'stretch'].includes(justifySelf)) {
-        throw new Error('Invalid justifySelf value');
-    }
-    if (!['start', 'end', 'center', 'stretch'].includes(alignSelf)) {
-        throw new Error('Invalid alignSelf value');
-    }
-
-    return {
-        gridColumnStart: colStart,
-        gridColumnEnd: colEnd,
-        gridRowStart: rowStart,
-        gridRowEnd: rowEnd,
-        justifySelf,
-        alignSelf,
-    };
+  return responsive({
+    gridColumnStart: colStart,
+    gridColumnEnd: colEnd,
+    gridRowStart: rowStart,
+    gridRowEnd: rowEnd,
+    justifySelf,
+    alignSelf,
+  });
 }
 
+function processGridValue(
+  value: ResponsiveValue<GridValue>,
+): ResponsiveValue<string> {
+  if (typeof value === "object" && value !== null) {
+    const processed: Partial<Record<Breakpoint, string>> = {};
+    for (const [breakpoint, val] of Object.entries(value)) {
+      processed[breakpoint as Breakpoint] =
+        typeof val === "number" ? `repeat(${val}, 1fr)` : val;
+    }
+    return processed;
+  }
+  return typeof value === "number" ? `repeat(${value}, 1fr)` : value;
+}

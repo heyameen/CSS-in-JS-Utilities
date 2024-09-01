@@ -6,3 +6,4 @@ export * from "./effects/shadows";
 export * from "./effects/transitions";
 export * from "./typography/typography";
 export * from "./animation/animations";
+export { getAllStyles } from "./helper/createStyle";

@@ -1,42 +1,139 @@
-export type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+import { appendToStyleElement, isServer } from "../helper/createStyle";
 
-const breakpoints: Record<'base' | Breakpoint, string> = {
-    base: '0',
-    sm: '640px',
-    md: '768px',
-    lg: '1024px',
-    xl: '1280px',
-    '2xl': '1536px',
+type Breakpoint = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
+
+const breakpoints: Record<Breakpoint, number> = {
+  base: 0,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
 };
 
 type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
 
-export const responsive = <T extends Record<string, any>>(styles: {
-    [K in keyof T]: ResponsiveValue<T[K]>;
-}) => {
-    const bps = ['base', ...Object.keys(breakpoints)] as ('base' | Breakpoint)[];
+let responsiveProps: Map<string, ResponsiveValue<string>> = new Map();
+let propIndex = 0;
 
-    return bps.reduce((acc, bp) => {
-        const currentStyles = Object.entries(styles).reduce((styleAcc, [property, value]) => {
-            if (typeof value === 'object' && value !== null) {
-                if (bp in value && value[bp as keyof typeof value] !== undefined) {
-                    styleAcc[property] = value[bp as keyof typeof value];
-                }
-            } else if (bp === 'base') {
-                styleAcc[property] = value;
-            }
-            return styleAcc;
-        }, {} as Record<string, any>);
+const getResizeListener = (() => {
+  let listenerAdded = false;
+  return () => {
+    if (!listenerAdded && !isServer) {
+      window.addEventListener("resize", updateStyles, { passive: true });
+      listenerAdded = true;
+    }
+  };
+})();
 
-        if (Object.keys(currentStyles).length > 0) {
-            if (bp === 'base') {
-                Object.assign(acc, currentStyles);
-            } else {
-                acc[`@media (min-width: ${breakpoints[bp as Breakpoint]})`] = currentStyles;
-            }
+function responsive<T extends Record<string, ResponsiveValue<any>>>(
+  styles: T,
+): T {
+  const result: any = {};
+
+  for (const [key, value] of Object.entries(styles)) {
+    const propName = `--css-in-js-utils-${propIndex++}`;
+    if (typeof value === "object" && value !== null) {
+      responsiveProps.set(propName, stringifyValue(value));
+    } else {
+      responsiveProps.set(propName, stringifyValue({ base: value }));
+    }
+    result[key] = `var(${propName})`;
+  }
+
+  if (!isServer) {
+    updateStyles();
+    getResizeListener();
+  }
+  return result as T;
+}
+
+export function stringifyValue(
+  value: ResponsiveValue<any>,
+): ResponsiveValue<string> {
+  if (typeof value === "object" && value !== null) {
+    if (
+      "base" in value ||
+      "sm" in value ||
+      "md" in value ||
+      "lg" in value ||
+      "xl" in value ||
+      "2xl" in value
+    ) {
+      const result: Partial<Record<Breakpoint, string>> = {};
+      for (const [breakpoint, val] of Object.entries(value)) {
+        result[breakpoint as Breakpoint] = stringifySingleValue(val);
+      }
+      return result;
+    } else {
+      return JSON.stringify(value);
+    }
+  }
+  return stringifySingleValue(value);
+}
+
+function stringifySingleValue(value: any): string {
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return value.toString();
+  if (typeof value === "object" && value !== null) return JSON.stringify(value);
+  return String(value);
+}
+
+function updateStyles() {
+  if (isServer) return;
+
+  let css = "";
+  responsiveProps.forEach((value, prop) => {
+    if (typeof value === "object" && value !== null) {
+      const breakpointEntries = Object.entries(value) as [Breakpoint, string][];
+      breakpointEntries.sort((a, b) => breakpoints[a[0]] - breakpoints[b[0]]);
+
+      breakpointEntries.forEach(([breakpoint, breakpointValue]) => {
+        if (breakpoint === "base") {
+          css += `${prop}: ${breakpointValue};`;
+        } else {
+          const minWidth = breakpoints[breakpoint];
+          css += `@media (min-width: ${minWidth}px) { ${prop}: ${breakpointValue}; }`;
         }
+      });
+    } else {
+      css += `${prop}: ${value};`;
+    }
+  });
 
-        return acc;
-    }, {} as Record<string, any>);
+  appendToStyleElement(`:root { ${css} }`);
+}
+
+function getResponsiveStyles(): string {
+  let css = "";
+  responsiveProps.forEach((value, prop) => {
+    if (typeof value === "object" && value !== null) {
+      const breakpointEntries = Object.entries(value) as [Breakpoint, string][];
+      breakpointEntries.sort((a, b) => breakpoints[a[0]] - breakpoints[b[0]]);
+
+      breakpointEntries.forEach(([breakpoint, breakpointValue]) => {
+        if (breakpoint === "base") {
+          css += `${prop}: ${breakpointValue};`;
+        } else {
+          const minWidth = breakpoints[breakpoint];
+          css += `@media (min-width: ${minWidth}px) { ${prop}: ${breakpointValue}; }`;
+        }
+      });
+    } else {
+      css += `${prop}: ${value};`;
+    }
+  });
+
+  return `:root { ${css} }`;
+}
+export function clearStyles() {
+  responsiveProps.clear();
+  propIndex = 0;
+}
+
+export {
+  responsive,
+  getResponsiveStyles,
+  type ResponsiveValue,
+  type Breakpoint,
 };
-

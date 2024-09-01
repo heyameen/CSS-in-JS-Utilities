@@ -1,17 +1,18 @@
-# CSS-in-JS Utilities
+# 🎨 CSS-in-JS Utilities: : Your Styling Superpower!
 
-A modern, comprehensive collection of helper functions and utilities for CSS-in-JS libraries. This package provides a set of TypeScript utilities to speed up common styling tasks and improve consistency in your React projects.
+A modern, comprehensive collection of helper functions and utilities for CSS-in-JS libraries. This package provides a set of TypeScript utilities to speed up common styling tasks and improve consistency in your projects. Say goodbye to repetitive styling tasks and hello to consistent, efficient, and downright-friendly
+styling!
 
-## Features
+## ✨ Features
 
-- Layout helpers (Flexbox and Grid)
 - Responsive design utilities
+- Layout helpers (Flexbox and Grid)
 - Typography helpers
-- Effects (shadows and transitions)
 - Color utilities
-- Animation helpers
+- Effects (shadows and transitions)
+- Animation utilities
 
-## Installation
+## 🚀 Getting Started
 
 Install the package using npm:
 
@@ -23,26 +24,38 @@ or
 yarn add css-in-js-utilities
 ```
 
-## Usage
-Import the utilities you need from the package:
+## Usage Guide
+CSS-in-JS Utilities offers a wide range of powerful functions to enhance your styling workflow. Let's explore each category with practical examples:
 
-## Flex Layout
-
+### Responsive design utilities
+Create adaptive layouts with ease:
 ```typescript
-import { flexContainer } from 'css-in-js-utilities';
+import { responsive } from 'css-in-js-utilities';
 
-// Create a flex container with default values
-const defaultContainer = flexContainer();
+const responsiveStyles = responsive({
+    display: { base: 'block', md: 'flex' },
+    fontSize: { base: '14px', md: '16px', xl: '18px' },
+});
 // Result:
 // {
-//   display: 'flex',
-//   flexDirection: 'row',
-//   justifyContent: 'flex-start',
-//   alignItems: 'stretch'
+//   display: 'block',
+//   fontSize: '14px',
+//   '@media (min-width: 768px)': {
+//     display: 'flex',
+//     fontSize: '16px'
+//   },
+//   '@media (min-width: 1280px)': {
+//     fontSize: '18px'
+//   }
 // }
+```
 
-// Create a custom flex container
-const customContainer = flexContainer('column', 'space-between', 'center');
+### Flex Layout
+Create flexible layouts with intuitive controls:
+```typescript
+import { flexContainer, flexItem } from 'css-in-js-utilities';
+
+const container = flexContainer('column', 'space-between', 'center');
 // Result:
 // {
 //   display: 'flex',
@@ -50,26 +63,8 @@ const customContainer = flexContainer('column', 'space-between', 'center');
 //   justifyContent: 'space-between',
 //   alignItems: 'center'
 // }
-```
 
-**Parameters**
-1. `direction`: 'row' | 'column' (default: 'row')
-2. `justify`: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' (default: 'flex-start')
-3. `align`: 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline' (default: 'stretch')
-
-```typescript
-import { flexItem } from 'css-in-js-utilities';
-// Create a flex item with default values
-const defaultItem = flexItem();
-// Result:
-// {
-//   flexGrow: 0,
-//   flexShrink: 1,
-//   flexBasis: 'auto'
-// }
-
-// Create a custom flex item
-const customItem = flexItem(2, 1, '100px');
+const item = flexItem(2, 1, '100px');
 // Result:
 // {
 //   flexGrow: 2,
@@ -77,34 +72,15 @@ const customItem = flexItem(2, 1, '100px');
 //   flexBasis: '100px'
 // }
 ```
-Parameters
-1. `grow`: number (default: 0)
-2. `shrink`: number (default: 1)
-3. `basis`: string (default: 'auto')
 
-## Grid Layout
+### Grid Layout
 
-Import the grid utilities from the package:
+Build complex grid systems effortlessly:
 
 ```typescript
 import { gridContainer, gridItem } from 'css-in-js-utilities';
 
-// Create a grid container with default values
-const defaultGrid = gridContainer();
-// Result:
-// {
-//   display: 'grid',
-//   gridTemplateColumns: 'repeat(1, 1fr)',
-//   gridTemplateRows: 'auto',
-//   gap: '1rem',
-//   justifyItems: 'stretch',
-//   alignItems: 'stretch',
-//   justifyContent: 'start',
-//   alignContent: 'start'
-// }
-
-// Create a custom grid container
-const customGrid = gridContainer(3, 2, '20px', 'center', 'end', 'space-between', 'space-around');
+const container = gridContainer(3, 2, '20px', 'center', 'end', 'space-between', 'space-around');
 // Result:
 // {
 //   display: 'grid',
@@ -117,20 +93,7 @@ const customGrid = gridContainer(3, 2, '20px', 'center', 'end', 'space-between',
 //   alignContent: 'space-around'
 // }
 
-// Create a grid item with default values
-const defaultItem = gridItem();
-// Result:
-// {
-//   gridColumnStart: 'auto',
-//   gridColumnEnd: 'auto',
-//   gridRowStart: 'auto',
-//   gridRowEnd: 'auto',
-//   justifySelf: 'stretch',
-//   alignSelf: 'stretch'
-// }
-
-// Create a custom grid item
-const customItem = gridItem(1, 3, 2, 4, 'start', 'center');
+const item = gridItem(1, 3, 2, 4, 'start', 'center');
 // Result:
 // {
 //   gridColumnStart: 1,
@@ -141,63 +104,101 @@ const customItem = gridItem(1, 3, 2, 4, 'start', 'center');
 //   alignSelf: 'center'
 // }
 ```
-gridContainer Parameters
-1. `columns`: number | string (default: 1)
-2. `rows`: number | string (default: 'auto')
-3. `gap`: string (default: '1rem')
-4. `justifyItems`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
-5. `alignItems`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
-6. `justifyContent`: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' (default: 'start')
-7. `alignContent`: 'start' | 'end' | 'center' | 'stretch' | 'space-around' | 'space-between' | 'space-evenly' (default: 'start')
 
-gridItem Parameters
-1. `colStart`: number | 'auto' (default: 'auto')
-2. `colEnd`: number | 'auto' (default: 'auto')
-3. `rowStart`: number | 'auto' (default: 'auto')
-4. `rowEnd`: number | 'auto' (default: 'auto')
-5. `justifySelf`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
-6. `alignSelf`: 'start' | 'end' | 'center' | 'stretch' (default: 'stretch')
+### Typography
 
-## Responsive Design
-
-Import the responsive utility from the package:
-
+Fine-tune your text styles:
 ```typescript
-import { responsive } from 'css-in-js-utilities';
+import { fontSize, fontWeight, lineHeight, letterSpacing, textAlign, createTypography } from 'css-in-js-utilities';
 
-// Create responsive styles
-const responsiveStyles = responsive({
-  display: { base: 'block', md: 'flex' },
-  flexDirection: { base: 'column', lg: 'row' },
-  padding: { base: '1rem', lg: '2rem' },
-  fontSize: { base: '14px', md: '16px', xl: '18px' },
-});
+const responsiveFontSize = fontSize({ base: '16px', md: '18px', lg: '20px' });
+// Result: { fontSize: { base: '16px', md: '18px', lg: '20px' } }
 
+const boldWeight = fontWeight('bold');
+// Result: { fontWeight: 'bold' }
+
+const customLineHeight = lineHeight(1.5);
+// Result: { lineHeight: 1.5 }
+
+const wideLetterSpacing = letterSpacing('0.05em');
+// Result: { letterSpacing: '0.05em' }
+
+const centerAlign = textAlign('center');
+// Result: { textAlign: 'center' }
+
+const headingTypography = createTypography('heading', '24px', 'bold', 'center');
 // Result:
 // {
-//   display: 'block',
-//   flexDirection: 'column',
-//   padding: '1rem',
-//   fontSize: '14px',
-//   '@media (min-width: 768px)': {
-//     display: 'flex',
-//     fontSize: '16px'
-//   },
-//   '@media (min-width: 1024px)': {
-//     flexDirection: 'row',
-//     padding: '2rem'
-//   },
-//   '@media (min-width: 1280px)': {
-//     fontSize: '18px'
-//   }
+//   fontSize: '24px',
+//   fontWeight: 'bold',
+//   textAlign: 'center',
+//   lineHeight: 1.2,
+//   letterSpacing: '-0.02em'
+// }
+
+// Using createTypography with breakpoints
+const responsiveHeadingTypography = createTypography('heading', { base: '24px', md: '32px' }, 'bold', 'center');
+// Result:
+// {
+//   fontSize: '24px',
+//   fontWeight: 'bold',
+//   textAlign: 'center',
+//   lineHeight: 1.2,
+//   letterSpacing: '-0.02em',
+//   '@media (min-width: 768px)': { fontSize: '32px' }
 // }
 ```
-The responsive function allows you to define styles that change based on screen size. It uses the following breakpoints:
-1. `sm`: 640px
-2. `md`: 768px
-3. `lg`: 1024px
-4. `xl`: 1280px
-5. `2xl`: 1536px
+
+### Color Utilities
+
+Effortlessly manage and manipulate colors:
+
+```typescript
+import { toRgba, lighten, darken, complementary, analogous } from 'css-in-js-utilities';
+
+const rgbaColor = toRgba('#FF5733', 0.8);
+// Result: 'rgba(255, 87, 51, 0.8)'
+
+const lightenedColor = lighten('#3366CC', 20);
+// Result: '#6699FF'
+
+const darkenedColor = darken('#3366CC', 20);
+// Result: '#003399'
+
+const complementaryColor = complementary('#3366CC');
+// Result: '#CC9933'
+
+const analogousColor = analogous('#3366CC', 30);
+// Result: '#3333CC'
+```
+
+### Shadow Effects
+Add depth to your elements:
+```typescript
+import { boxShadow, textShadow } from 'css-in-js-utilities';
+
+const boxShadowStyle = boxShadow('lg', 'rgba(0, 0, 255, 0.2)', true);
+// Result: { boxShadow: 'inset 0px 4px 8px 0px rgba(0, 0, 255, 0.2)' }
+
+const textShadowStyle = textShadow('xl', 'rgba(255, 0, 0, 0.3)');
+// Result: { textShadow: '0px 8px 16px rgba(255, 0, 0, 0.3)' }
+```
+
+### Transition Utilities
+Create smooth state changes:
+
+```typescript
+import { transition, multipleTransitions } from 'css-in-js-utilities';
+
+const singleTransition = transition('opacity', 300, 'ease-in-out', 100);
+// Result: { transition: 'opacity 300ms ease-in-out 100ms' }
+
+const multiTransition = multipleTransitions(
+    transition('opacity', 300),
+    transition('transform', 500, 'ease-out', 100)
+);
+// Result: { transition: 'opacity 300ms ease 0ms, transform 500ms ease-out 100ms' }
+```
 
 ## Transitions
 
@@ -223,212 +224,19 @@ const multiTransition = multipleTransitions(
 //   transition: 'opacity 300ms ease-in-out 0ms, transform 500ms ease-out 100ms'
 // }
 ```
-Parameters for transition:
 
-1. `property`: TransitionProperty (default: 'all')
-2. `duration`: number (in milliseconds, default: 300)
-3. `timing`: TransitionTiming (default: 'ease')
-4. `delay`: number (in milliseconds, default: 0)
-
-The multipleTransitions function accepts any number of transition objects created by the transition function.
-
-## Shadows
-
-Import the shadow utilities from the package:
-
-```typescript
-import { boxShadow, textShadow } from 'css-in-js-utilities';
-
-// Create a box shadow
-const defaultBoxShadow = boxShadow();
-// Result:
-// {
-//   boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.1)'
-// }
-
-// Create a custom box shadow
-const customBoxShadow = boxShadow('lg', 'rgba(0, 0, 255, 0.2)', true);
-// Result:
-// {
-//   boxShadow: 'inset 0px 4px 8px 0px rgba(0, 0, 255, 0.2)'
-// }
-
-// Create a text shadow
-const defaultTextShadow = textShadow();
-// Result:
-// {
-//   textShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
-// }
-
-// Create a custom text shadow
-const customTextShadow = textShadow('xl', 'rgba(255, 0, 0, 0.3)');
-// Result:
-// {
-//   textShadow: '0px 8px 16px rgba(255, 0, 0, 0.3)'
-// }
-```
-Parameters for boxShadow:
-
-1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
-2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
-3. `inset`: boolean (default: false)
-
-Parameters for textShadow:
-
-1. `size`: 'sm' | 'md' | 'lg' | 'xl' | '2xl' (default: 'md')
-2. `color`: string (default: 'rgba(0, 0, 0, 0.1)')
-
-## Typography
-
-Import the typography utilities from the package:
-
-```typescript
-import { fontSize, fontWeight, lineHeight, letterSpacing, textAlign, textTransform, fontFamily, textDecoration, fontStyle, createTypography } from 'css-in-js-utilities';
-
-// Create font size styles
-const responsiveFontSize = fontSize({ base: '16px', md: '18px', lg: '20px' });
-// Result:
-// {
-//   fontSize: '16px',
-//   '@media (min-width: 768px)': { fontSize: '18px' },
-//   '@media (min-width: 1024px)': { fontSize: '20px' }
-// }
-
-// Create font weight styles
-const boldWeight = fontWeight('bold');
-// Result: { fontWeight: 'bold' }
-
-// Create line height styles
-const customLineHeight = lineHeight(1.5);
-// Result: { lineHeight: 1.5 }
-
-// Create letter spacing styles
-const wideLetterSpacing = letterSpacing('0.05em');
-// Result: { letterSpacing: '0.05em' }
-
-// Create text align styles
-const centerAlign = textAlign('center');
-// Result: { textAlign: 'center' }
-
-// Create text transform styles
-const uppercase = textTransform('uppercase');
-// Result: { textTransform: 'uppercase' }
-
-// Create font family styles
-const sansSerif = fontFamily('Arial, sans-serif');
-// Result: { fontFamily: 'Arial, sans-serif' }
-
-// Create text decoration styles
-const underline = textDecoration('underline');
-// Result: { textDecoration: 'underline' }
-
-// Create font style styles
-const italic = fontStyle('italic');
-// Result: { fontStyle: 'italic' }
-
-// Create a complete typography preset
-const headingTypography = createTypography('heading', { base: '24px', md: '32px' }, 'bold', 'center');
-// Result:
-// {
-//   fontSize: '24px',
-//   fontWeight: 'bold',
-//   textAlign: 'center',
-//   lineHeight: 1.2,
-//   letterSpacing: '-0.02em',
-//   '@media (min-width: 768px)': { fontSize: '32px' }
-// }
-```
-Parameters for `fontSize`:
-`size`: Font size value or responsive object
-
-Parameters for `fontWeight`:
-`weight`: Font weight value or responsive object
-Values: 'normal', 'bold', 'lighter', 'bolder', 100-900
-
-Parameters for `lineHeight`:
-`height`: Line height value or responsive object
-
-Parameters for `letterSpacing`:
-`spacing`: Letter spacing value or responsive object
-
-Parameters for `textAlign`:
-`align`: Text alignment value or responsive object
-Values: 'left', 'right', 'center', 'justify'
-
-Parameters for `textTransform`:
-`transform`: Text transform value or responsive object
-Values: 'none', 'capitalize', 'uppercase', 'lowercase'
-
-Parameters for `fontFamily`:
-`family`: Font family value or responsive object
-
-Parameters for `textDecoration`:
-`decoration`: Text decoration value or responsive object
-Values: 'none', 'underline', 'overline', 'line-through'
-
-Parameters for `fontStyle`:
-`style`: Font style value or responsive object
-Values: 'normal', 'italic', 'oblique'
-
-Parameters for `createTypography`:
-1. `preset`: Typography preset ('heading', 'subheading', 'body', 'caption')
-2. `size`: Font size value or responsive object
-3. `weight`: Font weight value or responsive object (default: 'normal')
-4. `align`: Text alignment value or responsive object (default: 'left')
-
-All functions support responsive values using the Record type with Breakpoint keys.
-
-## Color Utilities
-
-Import the color utilities from the package:
-
-```typescript
-import { toRgba, lighten, darken, complementary, analogous } from 'css-in-js-utilities';
-
-// Convert a color to RGBA format
-const rgbaColor = toRgba('#FF5733', 0.8);
-// Result: 'rgba(255, 87, 51, 0.8)'
-
-// Lighten a color
-const lightenedColor = lighten('#3366CC', 20);
-// Result: '#6699FF'
-
-// Darken a color
-const darkenedColor = darken('#3366CC', 20);
-// Result: '#003399'
-
-// Generate a complementary color
-const complementaryColor = complementary('#3366CC');
-// Result: '#CC9933'
-
-// Generate an analogous color
-const analogousColor = analogous('#3366CC', 30);
-// Result: '#3333CC'
-```
-These color utilities provide powerful functions for manipulating and generating colors in your CSS-in-JS projects.
-
-Parameters:
-1. `toRgba`(color: string, alpha: number = 1): Converts a color to RGBA format. Alpha should be between 0 and 1.
-2. `lighten`(color: string, amount: number): Lightens a color by a percentage (0-100).
-3. `darken`(color: string, percentage: number): Darkens a color by a percentage (0-100).
-4. `complementary`(color: string): Generates a complementary color.
-5. `analogous`(color: string, angle: number = 30): Generates an analogous color. Angle should be between 1 and 359 degrees.
-
-All functions accept colors in various formats (hex, rgb, rgba, hsl, named colors) and return results in uppercase hexadecimal format, except for toRgba which returns a rgba string.
-
-## Animation Helpers
-
-Import the animation utilities from the package:
+### Animation Utilities
+Bring your UI to life with our animation helpers:
 
 ```typescript
 import { keyframe, animation, multipleAnimations } from 'css-in-js-utilities';
 
-// Define keyframe animations
+// Define keyframes
 const fadeIn = keyframe('fadeIn', {
   from: { opacity: 0 },
   to: { opacity: 1 }
 });
-// Result: '@keyframes animation { from { opacity: 0; } to { opacity: 1; } }'
+// Result: '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }'
 
 // Create a single animation
 const fadeInAnimation = animation('fadeIn', '1s', 'ease-in-out');
@@ -440,21 +248,13 @@ const complexAnimation = multipleAnimations(
   animation('slideIn', '0.5s', 'ease-out', '0.2s')
 );
 // Result: { animation: 'fadeIn 1s ease 0s 1 normal none running, slideIn 0.5s ease-out 0.2s 1 normal none running' }
-
 ```
-These animation utilities provide powerful functions for creating and combining keyframe animations in your CSS-in-JS projects.
-
-Parameters:
-1. `keyframe` (name: string, frames: KeyframeStyles): Creates a keyframe animation string.
-2. `animation` (name: string, duration?: string | number, timingFunction?: string, delay?: string | number, iterationCount?: string | number, direction?: AnimationDirection, fillMode?: AnimationFillMode, playState?: AnimationPlayState): Creates an animation string.
-3. `multipleAnimations` (...animations: string[]): Combines multiple animations into a single animation string.
-
-These functions allow you to create complex animations with ease, providing full control over all animation properties.
 
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, please follow these steps:
+We're always looking for fellow style enthusiasts to join our ranks! Whether you're reporting bugs, suggesting features, or contributing code, your ideas can help shape the future of the package. If you'd like to contribute, please follow these contribution
+guidelines:
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/SpecificFeature`)
@@ -465,7 +265,7 @@ We welcome contributions to CSS-in-JS Utilities! If you'd like to contribute, pl
 For more detailed information on contributing, please see our [CONTRIBUTE.md](CONTRIBUTE.md) file.
 
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

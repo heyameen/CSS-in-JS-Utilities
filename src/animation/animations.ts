@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import { appendToStyleElement, isServer } from "../helper/createStyle";
 
 type KeyframeStyles = Record<string, CSSProperties>;
 type AnimationDirection =
@@ -8,6 +9,7 @@ type AnimationDirection =
   | "alternate-reverse";
 type AnimationFillMode = "none" | "forwards" | "backwards" | "both";
 type AnimationPlayState = "running" | "paused";
+let keyframesStore: Set<string> = new Set();
 
 export const keyframe = (name: string, frames: KeyframeStyles): string => {
   const keyframeString = Object.entries(frames)
@@ -18,7 +20,13 @@ export const keyframe = (name: string, frames: KeyframeStyles): string => {
       return `${key} { ${cssStyles} }`;
     })
     .join(" ");
-  return `@keyframes ${name} { ${keyframeString} }`;
+  const fullKeyFrame = `@keyframes ${name} { ${keyframeString} }`;
+  if (!isServer) {
+    appendToStyleElement(fullKeyFrame);
+  }
+
+  keyframesStore.add(fullKeyFrame);
+  return fullKeyFrame;
 };
 
 export const animation = (
@@ -30,7 +38,7 @@ export const animation = (
   direction: AnimationDirection = "normal",
   fillMode: AnimationFillMode = "none",
   playState: AnimationPlayState = "running",
-): string => {
+): { animation: string } => {
   if (typeof duration === "number") duration = `${duration}ms`;
   if (typeof delay === "number") delay = `${delay}ms`;
 
@@ -44,20 +52,24 @@ export const animation = (
     throw new Error('Iteration count must be a positive number or "infinite".');
   }
 
-  return [
-    name,
-    duration,
-    timingFunction,
-    delay,
-    iterationCount === "infinite" ? "infinite" : iterationCount.toString(),
-    direction,
-    fillMode,
-    playState,
-  ].join(" ");
+  const animationString = `${name} ${duration} ${timingFunction} ${delay} ${iterationCount} ${direction} ${fillMode} ${playState}`;
+
+  return { animation: animationString };
 };
 
 export const multipleAnimations = (
-  ...animations: string[]
+  ...animations: Array<{ animation: string } | string>
 ): { animation: string } => {
-  return { animation: animations.join(", ") };
+  const animationStrings = animations.map((anim) =>
+    typeof anim === "string" ? anim : anim.animation,
+  );
+  return { animation: animationStrings.join(", ") };
+};
+
+export const getAllKeyframes = (): string => {
+  return Array.from(keyframesStore).join("\n");
+};
+
+export const clearKeyframes = (): void => {
+  keyframesStore.clear();
 };

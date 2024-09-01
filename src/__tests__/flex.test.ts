@@ -1,82 +1,128 @@
-import { flexContainer, flexItem } from '../layout/flex';
+import { flexContainer, flexItem } from "../layout/flex";
+import { responsive } from "../responsive/breakpoints";
 
-describe('Flex Utilities', () => {
-    describe('flexContainer', () => {
-        test('creates correct styles with default values', () => {
-            const result = flexContainer();
-            expect(result).toEqual({
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'start',
-                alignItems: 'stretch',
-            });
-        });
+jest.mock("../responsive/breakpoints", () => ({
+  responsive: jest.fn((styles) => styles),
+}));
 
-        test('creates correct styles with custom values', () => {
-            const result = flexContainer('column', 'space-around', 'end');
-            expect(result).toEqual({
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-                alignItems: 'end',
-            });
-        });
+describe("Flex Utilities", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-        test('handles invalid flexDirection', () => {
-            //@ts-ignore
-            expect(() => flexContainer('invalid')).toThrow();
-        });
-
-        test('handles invalid justifyContent', () => {
-            //@ts-ignore
-            expect(() => flexContainer('row', 'invalid')).toThrow();
-        });
-
-        test('handles invalid alignItems', () => {
-            //@ts-ignore
-            expect(() => flexContainer('row', 'start', 'invalid')).toThrow();
-        });
+  describe("flexContainer function", () => {
+    test("default parameters", () => {
+      const result = flexContainer();
+      expect(responsive).toHaveBeenCalledWith({
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "stretch",
+      });
+      expect(result).toEqual({
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "start",
+        alignItems: "stretch",
+      });
     });
 
-    describe('flexItem', () => {
-        test('creates correct styles with default values', () => {
-            const result = flexItem();
-            expect(result).toEqual({
-                flex: '0 1 auto',
-            });
-        });
-
-        test('creates correct styles with custom grow', () => {
-            const result = flexItem(2);
-            expect(result).toEqual({
-                flex: '2 1 auto',
-            });
-        });
-
-        test('creates correct styles with custom grow and basis', () => {
-            const result = flexItem(2, '100px');
-            expect(result).toEqual({
-                flex: '2 1 100px',
-            });
-        });
-
-        test('creates correct styles with custom grow, shrink, and basis', () => {
-            const result = flexItem(2, '100px', 0);
-            expect(result).toEqual({
-                flex: '2 0 100px',
-            });
-        });
-
-        test('handles negative grow value', () => {
-            expect(() => flexItem(-1)).toThrow();
-        });
-
-        test('handles negative shrink value', () => {
-            expect(() => flexItem(1, 'auto', -1)).toThrow();
-        });
-
-        test('handles invalid basis value', () => {
-            expect(() => flexItem(1, 'invalid')).toThrow();
-        });
+    test("custom parameters", () => {
+      const result = flexContainer("column", "center", "baseline");
+      expect(responsive).toHaveBeenCalledWith({
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "baseline",
+      });
+      expect(result).toEqual({
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "baseline",
+      });
     });
+
+    test("responsive values", () => {
+      const result = flexContainer(
+        { base: "row", md: "column" },
+        { base: "start", lg: "space-between" },
+        { sm: "center", xl: "stretch" },
+      );
+      expect(responsive).toHaveBeenCalledWith({
+        display: "flex",
+        flexDirection: { base: "row", md: "column" },
+        justifyContent: { base: "start", lg: "space-between" },
+        alignItems: { sm: "center", xl: "stretch" },
+      });
+      expect(result).toEqual({
+        display: "flex",
+        flexDirection: { base: "row", md: "column" },
+        justifyContent: { base: "start", lg: "space-between" },
+        alignItems: { sm: "center", xl: "stretch" },
+      });
+    });
+  });
+
+  describe("flexItem function", () => {
+    test("default parameters", () => {
+      const result = flexItem();
+      expect(responsive).toHaveBeenCalledWith({
+        flexGrow: 0,
+        flexBasis: "auto",
+        flexShrink: 1,
+      });
+      expect(result).toEqual({
+        flexGrow: 0,
+        flexBasis: "auto",
+        flexShrink: 1,
+      });
+    });
+
+    test("custom parameters", () => {
+      const result = flexItem(1, "50%", 0);
+      expect(responsive).toHaveBeenCalledWith({
+        flexGrow: 1,
+        flexBasis: "50%",
+        flexShrink: 0,
+      });
+      expect(result).toEqual({
+        flexGrow: 1,
+        flexBasis: "50%",
+        flexShrink: 0,
+      });
+    });
+
+    test("responsive values", () => {
+      const result = flexItem(
+        { base: 0, md: 1 },
+        { sm: "100px", lg: "200px" },
+        { base: 1, xl: 0 },
+      );
+      expect(responsive).toHaveBeenCalledWith({
+        flexGrow: { base: 0, md: 1 },
+        flexBasis: { sm: "100px", lg: "200px" },
+        flexShrink: { base: 1, xl: 0 },
+      });
+      expect(result).toEqual({
+        flexGrow: { base: 0, md: 1 },
+        flexBasis: { sm: "100px", lg: "200px" },
+        flexShrink: { base: 1, xl: 0 },
+      });
+    });
+
+    test("numeric flex-basis", () => {
+      const result = flexItem(1, 100, 1);
+      expect(responsive).toHaveBeenCalledWith({
+        flexGrow: 1,
+        flexBasis: 100,
+        flexShrink: 1,
+      });
+      expect(result).toEqual({
+        flexGrow: 1,
+        flexBasis: 100,
+        flexShrink: 1,
+      });
+    });
+  });
 });

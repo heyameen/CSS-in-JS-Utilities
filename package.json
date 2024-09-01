@@ -1,6 +1,6 @@
 {
   "name": "css-in-js-utilities",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.0",
   "description": "A modern collection of helper functions for CSS-in-JS libraries",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
