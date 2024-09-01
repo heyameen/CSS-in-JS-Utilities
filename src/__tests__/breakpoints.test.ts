@@ -1,59 +1,110 @@
-import { responsive, type ResponsiveValue } from "../responsive/breakpoints"; // Adjust the import path
+import {
+  responsive,
+  getResponsiveStyles,
+  stringifyValue,
+  clearStyles,
+} from "../responsive/breakpoints";
 
-const mockWindowWidth = (width: number) => {
-  Object.defineProperty(window, "innerWidth", {
-    writable: true,
-    configurable: true,
-    value: width,
-  });
-};
+// Mock the appendToStyleElement function
+jest.mock("../helper/createStyle", () => ({
+  appendToStyleElement: jest.fn(),
+}));
 
-describe("responsive", () => {
+describe("Responsive CSS-in-JS Utility", () => {
   beforeEach(() => {
-    // Clear any previous mock
     jest.clearAllMocks();
+    // Reset the responsiveProps and propIndex
+    (global as any).responsiveProps = new Map();
+    (global as any).propIndex = 0;
+    clearStyles();
   });
 
-  it("should return base value when window width is less than smallest breakpoint", () => {
-    mockWindowWidth(500);
-    const value: ResponsiveValue<string> = { base: "100%", md: "250px" };
-    const resolved = responsive({ width: value });
+  describe("responsive function", () => {
+    it("should handle simple non-responsive styles", () => {
+      const styles = responsive({
+        color: "red",
+        fontSize: "16px",
+      });
 
-    expect(resolved.width).toBe("100%");
+      expect(styles).toEqual({
+        color: "var(--css-in-js-utils-0)",
+        fontSize: "var(--css-in-js-utils-1)",
+      });
+    });
+
+    it("should handle responsive styles", () => {
+      const styles = responsive({
+        color: { base: "red", md: "blue" },
+        fontSize: { base: "16px", lg: "20px" },
+      });
+
+      expect(styles).toEqual({
+        color: "var(--css-in-js-utils-0)",
+        fontSize: "var(--css-in-js-utils-1)",
+      });
+    });
+
+    it("should handle mixed responsive and non-responsive styles", () => {
+      const styles = responsive({
+        color: "red",
+        fontSize: { base: "16px", lg: "20px" },
+      });
+
+      expect(styles).toEqual({
+        color: "var(--css-in-js-utils-0)",
+        fontSize: "var(--css-in-js-utils-1)",
+      });
+    });
   });
 
-  it("should return md value when window width matches md breakpoint", () => {
-    mockWindowWidth(800);
-    const value: ResponsiveValue<string> = { base: "100%", md: "250px" };
-    const resolved = responsive({ width: value });
+  describe("getResponsiveStyles function", () => {
+    it("should generate correct CSS for non-responsive styles", () => {
+      responsive({
+        color: "red",
+        fontSize: "16px",
+      });
 
-    expect(resolved.width).toBe("250px");
+      const css = getResponsiveStyles();
+      expect(css).toBe(
+        ":root { --css-in-js-utils-0: red;--css-in-js-utils-1: 16px; }",
+      );
+    });
+
+    it("should generate correct CSS for responsive styles", () => {
+      responsive({
+        color: { base: "red", md: "blue" },
+        fontSize: { base: "16px", lg: "20px" },
+      });
+
+      const css = getResponsiveStyles();
+      expect(css).toBe(
+        ":root { --css-in-js-utils-0: red;@media (min-width: 768px) { --css-in-js-utils-0: blue; }--css-in-js-utils-1: 16px;@media (min-width: 1024px) { --css-in-js-utils-1: 20px; } }",
+      );
+    });
   });
 
-  it("should return the highest matching breakpoint value", () => {
-    mockWindowWidth(1300);
-    const value: ResponsiveValue<string> = {
-      base: "100%",
-      lg: "300px",
-      xl: "400px",
-    };
-    const resolved = responsive({ width: value });
+  describe("stringifyValue function", () => {
+    it("should stringify simple values correctly", () => {
+      const result = stringifyValue("red");
+      expect(result).toBe("red");
+    });
 
-    expect(resolved.width).toBe("400px");
-  });
+    it("should stringify numeric values correctly", () => {
+      const result = stringifyValue(16);
+      expect(result).toBe("16");
+    });
 
-  it("should use base value if no breakpoints match", () => {
-    mockWindowWidth(600);
-    const value: ResponsiveValue<string> = { base: "100%" };
-    const resolved = responsive({ width: value });
+    it("should stringify object values correctly", () => {
+      const result = stringifyValue({ foo: "bar" });
+      expect(result).toBe('{"foo":"bar"}');
+    });
 
-    expect(resolved.width).toBe("100%");
-  });
-
-  it("should handle non-responsive styles", () => {
-    const styles = { color: "red" };
-    const resolved = responsive(styles);
-
-    expect(resolved.color).toBe("red");
+    it("should stringify responsive values correctly", () => {
+      const result = stringifyValue({
+        base: "red",
+        md: "blue",
+      });
+      expect(result).toEqual({ base: "red", md: "blue" });
+    });
   });
 });

@@ -10,176 +10,155 @@ import {
   fontStyle,
   createTypography,
 } from "../typography/typography";
+import { responsive } from "../responsive/breakpoints";
 
-describe("Typography Utilities", () => {
+// Mock the responsive function
+jest.mock("../responsive/breakpoints", () => ({
+  responsive: jest.fn((styles) => styles),
+}));
+
+jest.mock("../helper/isValidCSSUnit", () => ({
+  __esModule: true,
+  default: jest.fn((value) => {
+    if (typeof value === "number") return true;
+    return typeof value === "string" && /^[\d.]+(px|em|rem|%)$/.test(value);
+  }),
+}));
+
+describe("Typography Module", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("fontSize", () => {
-    test("creates correct styles with single value", () => {
-      expect(fontSize("16px")).toEqual({ fontSize: { base: "16px" } });
+    it("should create a responsive fontSize property", () => {
+      const result = fontSize("16px");
+      expect(responsive).toHaveBeenCalledWith({ fontSize: "16px" });
+      expect(result).toEqual({ fontSize: "16px" });
     });
 
-    test("creates correct styles with responsive values", () => {
-      const result = fontSize({ base: "16px", md: "18px", lg: "20px" });
-      expect(result).toEqual({
-        fontSize: { base: "16px", md: "18px", lg: "20px" },
+    it("should handle responsive values", () => {
+      const result = fontSize({ base: "16px", md: "18px" });
+      expect(responsive).toHaveBeenCalledWith({
+        fontSize: { base: "16px", md: "18px" },
       });
+      expect(result).toEqual({ fontSize: { base: "16px", md: "18px" } });
+    });
+
+    it("should throw an error for invalid CSS values", () => {
+      expect(() => fontSize("invalid")).toThrow("Invalid font size value");
     });
   });
 
   describe("fontWeight", () => {
-    test("creates correct styles with single value", () => {
-      expect(fontWeight("bold")).toEqual({ fontWeight: { base: "bold" } });
+    it("should create a responsive fontWeight property", () => {
+      const result = fontWeight("bold");
+      expect(responsive).toHaveBeenCalledWith({ fontWeight: "bold" });
+      expect(result).toEqual({ fontWeight: "bold" });
     });
 
-    test("creates correct styles with numeric weight", () => {
-      expect(fontWeight(700)).toEqual({ fontWeight: { base: 700 } });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = fontWeight({ base: "normal", md: "bold" });
-      expect(result).toEqual({ fontWeight: { base: "normal", md: "bold" } });
+    it("should handle numeric font weights", () => {
+      const result = fontWeight(700);
+      expect(responsive).toHaveBeenCalledWith({ fontWeight: 700 });
+      expect(result).toEqual({ fontWeight: 700 });
     });
   });
 
   describe("lineHeight", () => {
-    test("creates correct styles with single value", () => {
-      expect(lineHeight(1.5)).toEqual({ lineHeight: { base: 1.5 } });
+    it("should create a responsive lineHeight property", () => {
+      const result = lineHeight(1.5);
+      expect(responsive).toHaveBeenCalledWith({ lineHeight: 1.5 });
+      expect(result).toEqual({ lineHeight: 1.5 });
     });
 
-    test("creates correct styles with string value", () => {
-      expect(lineHeight("2em")).toEqual({ lineHeight: { base: "2em" } });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = lineHeight({ base: 1.5, md: 1.6, lg: 1.7 });
-      expect(result).toEqual({ lineHeight: { base: 1.5, md: 1.6, lg: 1.7 } });
+    it("should throw an error for invalid CSS values", () => {
+      expect(() => lineHeight("invalid")).toThrow("Invalid line height value");
     });
   });
 
   describe("letterSpacing", () => {
-    test("creates correct styles with single value", () => {
-      expect(letterSpacing("0.05em")).toEqual({
-        letterSpacing: { base: "0.05em" },
-      });
+    it("should create a responsive letterSpacing property", () => {
+      const result = letterSpacing("0.1em");
+      expect(responsive).toHaveBeenCalledWith({ letterSpacing: "0.1em" });
+      expect(result).toEqual({ letterSpacing: "0.1em" });
     });
 
-    test("creates correct styles with numeric value", () => {
-      expect(letterSpacing(2)).toEqual({ letterSpacing: { base: 2 } });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = letterSpacing({ base: "0.05em", md: "0.1em" });
-      expect(result).toEqual({
-        letterSpacing: { base: "0.05em", md: "0.1em" },
-      });
+    it("should throw an error for invalid CSS values", () => {
+      expect(() => letterSpacing("invalid")).toThrow(
+        "Invalid letter-spacing value",
+      );
     });
   });
 
   describe("textAlign", () => {
-    test("creates correct styles with single value", () => {
-      expect(textAlign("center")).toEqual({ textAlign: { base: "center" } });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = textAlign({ base: "left", md: "center", lg: "right" });
-      expect(result).toEqual({
-        textAlign: { base: "left", md: "center", lg: "right" },
-      });
+    it("should create a responsive textAlign property", () => {
+      const result = textAlign("center");
+      expect(responsive).toHaveBeenCalledWith({ textAlign: "center" });
+      expect(result).toEqual({ textAlign: "center" });
     });
   });
 
   describe("textTransform", () => {
-    test("creates correct styles with single value", () => {
-      expect(textTransform("uppercase")).toEqual({
-        textTransform: "uppercase",
-      });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = textTransform({ base: "none", md: "uppercase" });
-      expect(result).toEqual({
-        textTransform: { base: "none", md: "uppercase" },
-      });
+    it("should create a responsive textTransform property", () => {
+      const result = textTransform("uppercase");
+      expect(responsive).toHaveBeenCalledWith({ textTransform: "uppercase" });
+      expect(result).toEqual({ textTransform: "uppercase" });
     });
   });
 
   describe("fontFamily", () => {
-    test("creates correct styles with single value", () => {
-      expect(fontFamily("Arial, sans-serif")).toEqual({
+    it("should create a responsive fontFamily property", () => {
+      const result = fontFamily("Arial, sans-serif");
+      expect(responsive).toHaveBeenCalledWith({
         fontFamily: "Arial, sans-serif",
       });
+      expect(result).toEqual({ fontFamily: "Arial, sans-serif" });
     });
 
-    test("creates correct styles with responsive values", () => {
-      const result = fontFamily({
-        base: "Arial, sans-serif",
-        md: "Helvetica, sans-serif",
-      });
-      expect(result).toEqual({
-        fontFamily: { base: "Arial, sans-serif", md: "Helvetica, sans-serif" },
-      });
+    it("should throw an error for empty font family", () => {
+      expect(() => fontFamily("")).toThrow("Font family cannot be empty");
     });
   });
 
   describe("textDecoration", () => {
-    test("creates correct styles with single value", () => {
-      expect(textDecoration("underline")).toEqual({
-        textDecoration: "underline",
-      });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = textDecoration({ base: "none", md: "underline" });
-      expect(result).toEqual({
-        textDecoration: { base: "none", md: "underline" },
-      });
+    it("should create a responsive textDecoration property", () => {
+      const result = textDecoration("underline");
+      expect(responsive).toHaveBeenCalledWith({ textDecoration: "underline" });
+      expect(result).toEqual({ textDecoration: "underline" });
     });
   });
 
   describe("fontStyle", () => {
-    test("creates correct styles with single value", () => {
-      expect(fontStyle("italic")).toEqual({ fontStyle: "italic" });
-    });
-
-    test("creates correct styles with responsive values", () => {
-      const result = fontStyle({ base: "normal", md: "italic" });
-      expect(result).toEqual({ fontStyle: { base: "normal", md: "italic" } });
+    it("should create a responsive fontStyle property", () => {
+      const result = fontStyle("italic");
+      expect(responsive).toHaveBeenCalledWith({ fontStyle: "italic" });
+      expect(result).toEqual({ fontStyle: "italic" });
     });
   });
 
   describe("createTypography", () => {
-    test("creates correct styles for heading preset", () => {
-      const result = createTypography(
-        "heading",
-        { base: "24px", md: "32px" },
-        "bold",
-        "center",
-      );
-      expect(result).toEqual({
-        fontSize: "24px",
-        fontWeight: "bold",
-        textAlign: "center",
-        lineHeight: "1.2",
-        letterSpacing: "-0.02em",
-        "@media (min-width: 768px)": {
-          fontSize: "32px",
-        },
-      });
-    });
-
-    test("creates correct styles for body preset", () => {
-      const result = createTypography("body", { base: "16px", lg: "18px" });
+    it("should create a typography configuration with default values", () => {
+      const result = createTypography("body", "16px");
       expect(result).toEqual({
         fontSize: "16px",
         fontWeight: "normal",
         textAlign: "left",
-        lineHeight: "1.5",
-        "@media (min-width: 1024px)": {
-          fontSize: "18px",
-        },
+        lineHeight: 1.5,
       });
     });
 
-    test("handles invalid preset", () => {
+    it("should create a typography configuration with custom values", () => {
+      const result = createTypography("heading", "24px", "bold", "center");
+      expect(result).toEqual({
+        fontSize: "24px",
+        fontWeight: "bold",
+        textAlign: "center",
+        lineHeight: 1.2,
+        letterSpacing: "-0.02em",
+      });
+    });
+
+    it("should throw an error for invalid preset", () => {
       expect(() => createTypography("invalid" as any, "16px")).toThrow(
         "Invalid typography preset",
       );

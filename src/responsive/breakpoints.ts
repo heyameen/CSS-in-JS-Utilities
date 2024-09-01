@@ -1,4 +1,4 @@
-import { appendToStyleElement } from "../helper/createStyle";
+import { appendToStyleElement, isServer } from "../helper/createStyle";
 
 type Breakpoint = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
 
@@ -15,7 +15,6 @@ type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
 
 let responsiveProps: Map<string, ResponsiveValue<string>> = new Map();
 let propIndex = 0;
-let isServer = typeof window === "undefined";
 
 const getResizeListener = (() => {
   let listenerAdded = false;
@@ -49,7 +48,9 @@ function responsive<T extends Record<string, ResponsiveValue<any>>>(
   return result as T;
 }
 
-function stringifyValue(value: ResponsiveValue<any>): ResponsiveValue<string> {
+export function stringifyValue(
+  value: ResponsiveValue<any>,
+): ResponsiveValue<string> {
   if (typeof value === "object" && value !== null) {
     if (
       "base" in value ||
@@ -88,11 +89,6 @@ function updateStyles() {
       breakpointEntries.sort((a, b) => breakpoints[a[0]] - breakpoints[b[0]]);
 
       breakpointEntries.forEach(([breakpoint, breakpointValue]) => {
-        if (prop.includes("grid-template-columns")) {
-          breakpointValue = breakpointValue.match(/^\d+$/)
-            ? `repeat(${breakpointValue}, 1fr)`
-            : breakpointValue;
-        }
         if (breakpoint === "base") {
           css += `${prop}: ${breakpointValue};`;
         } else {
@@ -108,7 +104,7 @@ function updateStyles() {
   appendToStyleElement(`:root { ${css} }`);
 }
 
-function getServerStyles(): string {
+function getResponsiveStyles(): string {
   let css = "";
   responsiveProps.forEach((value, prop) => {
     if (typeof value === "object" && value !== null) {
@@ -116,11 +112,6 @@ function getServerStyles(): string {
       breakpointEntries.sort((a, b) => breakpoints[a[0]] - breakpoints[b[0]]);
 
       breakpointEntries.forEach(([breakpoint, breakpointValue]) => {
-        if (prop.includes("grid-template-columns")) {
-          breakpointValue = breakpointValue.match(/^\d+$/)
-            ? `repeat(${breakpointValue}, 1fr)`
-            : breakpointValue;
-        }
         if (breakpoint === "base") {
           css += `${prop}: ${breakpointValue};`;
         } else {
@@ -135,5 +126,14 @@ function getServerStyles(): string {
 
   return `:root { ${css} }`;
 }
+export function clearStyles() {
+  responsiveProps.clear();
+  propIndex = 0;
+}
 
-export { responsive, getServerStyles, type ResponsiveValue, type Breakpoint };
+export {
+  responsive,
+  getResponsiveStyles,
+  type ResponsiveValue,
+  type Breakpoint,
+};

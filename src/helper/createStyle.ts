@@ -1,5 +1,8 @@
+import { getAllKeyframes } from "../animation/animations";
+import { getResponsiveStyles } from "../responsive/breakpoints";
+
 let styleElement: HTMLStyleElement | null = null;
-let isServer = typeof window === "undefined";
+export let isServer = typeof window === "undefined";
 
 function getOrCreateStyleElement() {
   if (!isServer && !styleElement) {
@@ -17,6 +20,8 @@ export function appendToStyleElement(css: string): void {
   }
 }
 
-export const insertKeyframe = (frames: string): void => {
-  appendToStyleElement(frames);
+export const getAllStyles = (): string => {
+  const keyframes = getAllKeyframes();
+  const responsiveStyles = getResponsiveStyles();
+  return `${keyframes}\n${responsiveStyles}`;
 };

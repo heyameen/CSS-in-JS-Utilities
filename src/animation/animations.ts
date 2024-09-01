@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { appendToStyleElement, insertKeyframe } from "../helper/createStyle";
+import { appendToStyleElement, isServer } from "../helper/createStyle";
 
 type KeyframeStyles = Record<string, CSSProperties>;
 type AnimationDirection =
@@ -9,6 +9,7 @@ type AnimationDirection =
   | "alternate-reverse";
 type AnimationFillMode = "none" | "forwards" | "backwards" | "both";
 type AnimationPlayState = "running" | "paused";
+let keyframesStore: Set<string> = new Set();
 
 export const keyframe = (name: string, frames: KeyframeStyles): string => {
   const keyframeString = Object.entries(frames)
@@ -20,9 +21,12 @@ export const keyframe = (name: string, frames: KeyframeStyles): string => {
     })
     .join(" ");
   const fullKeyFrame = `@keyframes ${name} { ${keyframeString} }`;
-  insertKeyframe(fullKeyFrame);
+  if (!isServer) {
+    appendToStyleElement(fullKeyFrame);
+  }
 
-  return name;
+  keyframesStore.add(fullKeyFrame);
+  return fullKeyFrame;
 };
 
 export const animation = (
@@ -48,22 +52,24 @@ export const animation = (
     throw new Error('Iteration count must be a positive number or "infinite".');
   }
 
-  const animationString = [
-    name,
-    duration,
-    timingFunction,
-    delay,
-    iterationCount === "infinite" ? "infinite" : iterationCount.toString(),
-    direction,
-    fillMode,
-    playState,
-  ].join(" ");
+  const animationString = `${name} ${duration} ${timingFunction} ${delay} ${iterationCount} ${direction} ${fillMode} ${playState}`;
 
   return { animation: animationString };
 };
 
 export const multipleAnimations = (
-  ...animations: string[]
+  ...animations: Array<{ animation: string } | string>
 ): { animation: string } => {
-  return { animation: animations.join(", ") };
+  const animationStrings = animations.map((anim) =>
+    typeof anim === "string" ? anim : anim.animation,
+  );
+  return { animation: animationStrings.join(", ") };
+};
+
+export const getAllKeyframes = (): string => {
+  return Array.from(keyframesStore).join("\n");
+};
+
+export const clearKeyframes = (): void => {
+  keyframesStore.clear();
 };

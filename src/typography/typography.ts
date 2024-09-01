@@ -27,6 +27,18 @@ type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
 
 // Helper Functions
 const validateCSSValue = (value: CSSValue, propertyName: string) => {
+  const allowNegative = [
+    "letter-spacing",
+    "word-spacing",
+    "text-indent",
+  ].includes(propertyName.toLowerCase());
+
+  if (allowNegative && typeof value === "string" && value.startsWith("-")) {
+    // Remove the minus sign for validation, then add it back
+    const absValue = value.slice(1);
+    if (isValidCSSUnit(absValue)) return;
+  }
+
   if (!isValidCSSUnit(value)) {
     throw new Error(
       `Invalid ${propertyName} value: ${value}. Use a number or a string with a valid CSS unit.`,
@@ -40,7 +52,7 @@ const validateResponsiveValue = (
 ) => {
   if (typeof value === "object" && value !== null) {
     Object.entries(value).forEach(([key, val]) =>
-      validateCSSValue(val, `${propertyName} for ${key}`),
+      validateCSSValue(val, propertyName),
     );
   } else {
     validateCSSValue(value, propertyName);
@@ -70,7 +82,7 @@ export const lineHeight = (height: ResponsiveValue<CSSValue>) => {
 };
 
 export const letterSpacing = (spacing: ResponsiveValue<CSSValue>) => {
-  validateResponsiveValue(spacing, "letter spacing");
+  validateResponsiveValue(spacing, "letter-spacing");
   return createResponsiveProperty("letterSpacing", spacing);
 };
 
