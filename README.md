@@ -200,31 +200,6 @@ const multiTransition = multipleTransitions(
 // Result: { transition: 'opacity 300ms ease 0ms, transform 500ms ease-out 100ms' }
 ```
 
-## Transitions
-
-Import the transition utilities from the package:
-
-```typescript
-import { transition, multipleTransitions } from 'css-in-js-utilities';
-
-// Create a single transition
-const singleTransition = transition('opacity', 300, 'ease-in-out', 100);
-// Result:
-// {
-//   transition: 'opacity 300ms ease-in-out 100ms'
-// }
-
-// Create multiple transitions
-const multiTransition = multipleTransitions(
-  transition('opacity', 300, 'ease-in-out'),
-  transition('transform', 500, 'ease-out', 100)
-);
-// Result:
-// {
-//   transition: 'opacity 300ms ease-in-out 0ms, transform 500ms ease-out 100ms'
-// }
-```
-
 ### Animation Utilities
 Bring your UI to life with our animation helpers:
 
