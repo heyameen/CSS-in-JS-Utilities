@@ -1,4 +1,4 @@
-# 🎨 CSS-in-JS Utilities: : Your Styling Superpower!
+# 🎨 CSS-in-JS Utilities: Your Styling Superpower!
 
 A modern, comprehensive collection of helper functions and utilities for CSS-in-JS libraries. This package provides a set of TypeScript utilities to speed up common styling tasks and improve consistency in your projects. Say goodbye to repetitive styling tasks and hello to consistent, efficient, and downright-friendly
 styling!
